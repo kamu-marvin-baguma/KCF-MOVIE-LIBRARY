@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(50)
+  email     String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(50)
+  createdAT DateTime @default(now())
+  updatedAT DateTime @updatedAt
+}
+
+enum Role {
+  admin
+  user
+}
+
+// model Admin{
+//   id Int @id @default(autoincrement())
+//   profile Profile?
+//   movies Movie[]
+// }
+
+model Movie {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(50)
+  description String   @db.VarChar(50)
+  createdAT   DateTime @default(now())
+  updatedAT   DateTime @updatedAt
+  price       Float
+  rating      Float
+  genre       Genre    @relation(fields: [genre_id], references: [id])
+  genre_id    Int
+}
+
+model Genre {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  movies Movie[]
+}
+
+model Order {
+  id        Int    @id @default(autoincrement())
+  user_id   String
+  orderdate Float
+}
+
+model Cart {
+  id       Int @id @default(autoincrement())
+  user_id  Int
+  movie_id Int
+  quantity Int
+}
+
+model OrderItem {
+  id         Int    @id @default(autoincrement())
+  orderId    String
+  movieId    String
+  quantity   String
+  totalPrice Float
+}
+
+model MovieRating {
+  id      Int   @id @default(autoincrement())
+  userId  Int
+  movieId Int
+  rating  Float
+}
