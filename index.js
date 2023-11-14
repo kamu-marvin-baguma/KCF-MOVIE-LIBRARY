@@ -1,5 +1,6 @@
 const express = require('express')
-const app = express()
+const bodyParser = require('body-parser');
+const authRoute =  require('./v1/routes/authRoute');
 
 
 const {getAllMovies, getMovie, postMovie, updateMovie, deleteMovie} = require('./v1/controllers/movieController');
@@ -8,16 +9,25 @@ const {getAllProfiles, getProfile, createProfile, updateProfile, deleteProfile} 
 const movieRouter = require('./v1/routes/movieRoutes')
 const profileRouter = require('./v1/routes/profileRoutes')
 
-
+const app = express()
 const port = 6060
 
-app.use(express.json())
-// app.use(express.urlencoded)
+//Import and using the protected route
+const protectedRoute = require('./v1/routes/protectedRoute');
+
+app.use('/api', protectedRoute);
+
+//Middleware
+app.use(bodyParser.json());
 
 
+// app.use(express.json())
+
+//Routes
+app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/profiles', profileRouter)
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Server is running on port ${port}`)
 })

@@ -36,7 +36,7 @@ const getMovie = async (req, res) => {
 
 const postMovie = async (req, res) => {
 
-  const{title, description, genre} = req.body
+  const{title, description,  price,  posterUrl, genre} = req.body
   try {
     const newMovie = await prisma.movie.create({
      data: req.body
@@ -49,10 +49,11 @@ const postMovie = async (req, res) => {
 
 const updateMovie = async (req, res) => {
   try {
+    console.log(req.body)
     
     const updatedMovie = await prisma.movie.update({
       where: { id: parseInt(req.params.id) },
-      data: req.body,
+      data: {...req.body},
       // include: {
       //   genre: true,
       // },
@@ -60,7 +61,6 @@ const updateMovie = async (req, res) => {
     if(!updatedMovie) {
       return res.status(404).json({ error: 'Movie not found' });
     }
-    // console.log(movie.
     res.json(updatedMovie);
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -68,13 +68,24 @@ const updateMovie = async (req, res) => {
 };
 
 const deleteMovie = async (req, res) => {
+  const id = parseInt(req.params.id)
   try {
-      const deletedMovie = await prisma.movie.delete({
-          where: { id: parseInt(req.params.id) },
-      });
-      if (!deletedMovie) {
-          return res.status(404).json({ error: 'Movie not found' });
-      }
+    const existMovie = await prisma.movie.findUnique({
+      where: {id :id}
+    })
+
+    if(!existMovie) {
+      res.json({message:"movie doesnt exist"})
+    }
+    
+    const deletedMovie = await prisma.movie.delete({
+        where: { id: id},
+    });
+
+    
+      // if (!deletedMovie) {
+      //     return res.status(404).json({ error: 'Movie not found' });
+      // }
       res.json(deletedMovie);
   } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });

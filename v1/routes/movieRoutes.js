@@ -6,16 +6,16 @@ const {getAllMovies, getMovie, postMovie, updateMovie, deleteMovie} = require('.
 router.route('/')
 .get(getAllMovies)
 
-router.route('/')
+router.route('/:id')
 .get(getMovie)
 
 router.route('/')
 .post(postMovie)
 
-router.route('/')
-.patch(updateMovie)
+router.route('/:id')
+.put(updateMovie)
 
-router.route('/')
+router.route('/:id')
 .delete(deleteMovie)
 
 

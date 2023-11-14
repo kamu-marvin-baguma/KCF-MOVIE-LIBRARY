@@ -14,9 +14,12 @@ model Profile {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(50)
   email     String   @unique @db.VarChar(50)
+  phone     String   @db.VarChar(50)
   password  String   @db.VarChar(50)
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt
+  role      Role     @default(user) 
+  
 }
 
 enum Role {
@@ -37,9 +40,10 @@ model Movie {
   createdAT   DateTime @default(now())
   updatedAT   DateTime @updatedAt
   price       Float
+  posterUrl   String?
   rating      Float
   genre       Genre    @relation(fields: [genre_id], references: [id])
-  genre_id    Int
+  genre_id    Int @default(0)
 }
 
 model Genre {

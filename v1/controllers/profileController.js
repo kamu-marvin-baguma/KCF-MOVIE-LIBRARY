@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const bcrypt = require("bcryptjs");
+// const bcrypt = require("bcryptjs");
 
 const getAllProfiles = async (req, res) => {
   try {
@@ -23,15 +23,7 @@ const getProfile = async (req, res) => {
 		const id = parseInt(req.params.id);
 		const userExists = await prisma.profile.findUnique({
 			where: { id },
-			// include: {
-			// 	course: {
-			// 		select: {
-			// 			course_name: true,
-			// 			id: true,
-			// 		},
-			// 	},
-			// 	profile: true,
-			// },
+			
 		});
 
 		if (!userExists) {
@@ -44,40 +36,7 @@ const getProfile = async (req, res) => {
 	}
 };
 
-// const getProfile = async (req, res) => {
-//   try {
-// 		const id = parseInt(req.params.id);
-// 		const profileExists = await prisma.profile.findUnique({
-// 			where: { id },
-// 			// include: {
-// 			// 	course: {
-// 			// 		select: {
-// 			// 			course_name: true,
-// 			// 			id: true,
-// 			// 		},
-// 			// 	},
-// 			// 	profile: true,
-// 			// },
-// 		});
 
-// 		if (!profileExists) {
-// 			return res.status(404).json({ error: "Profile doesn't exist" });
-// 		}
-// 		return res.status(200).json({ data: profileExists });
-// 	} catch (error) {
-// 		console.log(error);
-// 		res.status(400).json({ status: 400, error: `${error.message}` });
-// 	}
-//   // try {
-//   //   const { id } = req.params;
-//   //   const profile = await prisma.profile.findUnique({
-//   //     where: { id: id },
-//   //   });
-//   //   res.json(profile);
-//   // } catch (error) {
-//   //   console.log(error)
-//   // }
-// };
 
 const createProfile = async (req, res) => {
     try {
@@ -88,19 +47,18 @@ const createProfile = async (req, res) => {
 		if (!name || !email || !password) {
 			return res.status(400).json({ status: 400, msg: "Missing or empty fields" });
 		}
-		// const { error } = studentValidation(req.body);
-		// if (error) return res.status(400).json({ message: error.details[0].message });
+		
 
 		//Check if user doesn't exist
-		// const userExists = await prisma.student.findUnique({ where: { email } });
+		
 		const userExists = await prisma.profile.findUnique({ where: { email } });
 
 		if (userExists) {
 			return res.status(400).json({ status: 400, msg: "Record exists already" });
 		}
 		//save to database
-		// const salt = await bcrypt.genSalt(10);
-		// const hashedPassword = await bcrypt.hash(password, salt);
+		const salt = await bcrypt.genSalt(10);
+		const hashedPassword = await bcrypt.hash(password, salt);
 
 		const newUser = await prisma.profile.create({
 			data: {
@@ -126,14 +84,7 @@ const createProfile = async (req, res) => {
 		res.status(400).json({ status: 400, error: `${error.message}` });
 	}
 };
-//   try {
-//     const profile = await prisma.profile.create({
-//       data: req.body,
-//     });
-//     res.json(profile);
-//   } catch (error) {
-//     console.log(error);
-//   }
+
 
 
 const updateProfile = async (req, res) => {
@@ -177,15 +128,7 @@ const deleteProfile = async (req, res) => {
 	}
 };
 
-// const deleteProfile = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const deletedProfile = await prisma.profile.delete({
-//       where: { id: id },
-//     });
-//     res.json(deletedProfile);
-//   } catch (error) {}
-// };
+
 
 module.exports = {
   getAllProfiles,
