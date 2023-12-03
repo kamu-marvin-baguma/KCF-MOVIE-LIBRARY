@@ -32,7 +32,7 @@ app.use('/api/v1/profiles', profileRouter)
 
 // Welcome Route
 app.get('/', (req, res) => {
-  res.send('Welcome to the Movie Library!');
+  res.send('Welcome to the KCF Movie Library!');
 });
 
 

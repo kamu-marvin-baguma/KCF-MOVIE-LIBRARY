@@ -3,16 +3,11 @@ const prisma = new PrismaClient();
 
 const getAllMovies = async (req, res) => {
   try {
-    const movies = await prisma.movie.findMany({
-      // include: {
-      //     genre: true
-      // },
-    });
-    //list of genres
-    // const genres = await prisma.genre.findMany({});
+    const movies = await prisma.movie.findMany({});
+   
     res.json( movies );
   } catch (error) {
-    // console.log(error);
+    
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
