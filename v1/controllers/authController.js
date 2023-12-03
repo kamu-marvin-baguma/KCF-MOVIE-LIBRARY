@@ -1,13 +1,14 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const authModel = require('../models/authModel');
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 const registrationSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
-    name: Joi.string().required(),
-    phone: Joi.string().required(),
-    role: Joi.string().required(),
+    username: Joi.string().required(),
+    // phone: Joi.string().required(),
+    // role: Joi.string().required(),
 });
 
 const authController = {
@@ -22,7 +23,7 @@ const authController = {
                 return res.status(401).json({ message: 'Invalid credentials' });
             }
 
-            const token = jwt.sign({ email }, 'your-secret-key', { expiresIn: '1h' });
+            const token = jwt.sign({ email }, `${JWT_SECRET_KEY}`, { expiresIn: '1h' });
             res.json({ token });
         } catch (error) {
             console.error(error);
@@ -37,7 +38,7 @@ const authController = {
                 return res.status(400).json({ error: error.details[0].message });
             }
 
-            const { username, email, password, name, phone, role } = req.body;
+            const { username, email, password } = req.body;
 
             const existingUser = await authModel.getUserByEmail(email);
 
@@ -48,15 +49,13 @@ const authController = {
                     username,
                     email,
                     password,
-                    name,
-                    phone,
-                    role,
+                    role: 'user'
                 });
-
-                res.status(201).json({ message: 'User registered successfully' });
+                const token = jwt.sign({ email }, `${JWT_SECRET_KEY}`, { expiresIn: '1h' });
+                res.status(201).json({ message: 'User registered successfully', token });
             }
         } catch (error) {
-            console.error(error);
+            // console.error(error);
             res.status(500).json({ error: 'An error occurred while registering the user' });
         }
     },

@@ -12,9 +12,8 @@ datasource db {
 
 model Profile {
   id        Int      @id @default(autoincrement())
-  name      String   @db.VarChar(50)
+  username      String   @db.VarChar(50)
   email     String   @unique @db.VarChar(50)
-  phone     String   @db.VarChar(50)
   password  String   @db.VarChar(50)
   createdAT DateTime @default(now())
   updatedAT DateTime @updatedAt

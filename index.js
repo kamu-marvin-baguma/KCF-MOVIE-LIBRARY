@@ -26,6 +26,7 @@ app.use(bodyParser.json());
 
 //Routes
 app.use('/api/v1/auth', authRoute);
+
 app.use('/api/v1/movies', movieRouter)
 app.use('/api/v1/profiles', profileRouter)
 
